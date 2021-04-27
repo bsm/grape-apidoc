@@ -31,7 +31,7 @@ module Grape
       @out.puts '# Entities'
       @out.puts
 
-      @api.routes.map(&:entity).sort_by(&:name).each do |entity|
+      @api.routes.map(&:entity).compact.sort_by(&:name).each do |entity|
         write_entity_header!(entity)
         write_entity_fields!(entity)
       end

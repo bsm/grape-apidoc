@@ -1,6 +1,9 @@
 module Grape
   class Apidoc
-    autoload :RakeTask, './rake_task'
+    autoload :RakeTask, 'grape/apidoc/rake_task'
+    autoload :TableFormat, 'grape/apidoc/table_format'
+
+    ENTITY_TABLE = TableFormat.new([20, 10, 40]).freeze
 
     def initialize(root_api_class = nil, output: $stdout)
       @api = root_api_class || detect_root_api_class
@@ -15,6 +18,9 @@ module Grape
     private
 
     def detect_root_api_class
+      # performance shortcut for https://github.com/bsm/grape-app/
+      return Grape::App if defined?(Grape::App)
+
       # droot api is the one with largest route count:
       Grape::API.descendants.max do |a, b|
         a.try(:routes)&.count <=> b.try(:routes)&.count
@@ -25,7 +31,7 @@ module Grape
       @out.puts '# Entities'
       @out.puts
 
-      Grape::Entity.descendants.sort_by(&:name).each do |entity|
+      @api.routes.map(&:entity).sort_by(&:name).each do |entity|
         write_entity_header!(entity)
         write_entity_fields!(entity)
       end
@@ -37,7 +43,23 @@ module Grape
     end
 
     def write_entity_fields!(entity)
-      # TODO: dig into and write entity fields, maybe as table
+      unless entity.documentation.present?
+        @out.puts 'No fields exposed.'
+        @out.puts
+        return
+      end
+
+      @out.puts ENTITY_TABLE.format('Field', 'Type', 'Description')
+      @out.puts ENTITY_TABLE.separator
+
+      entity.documentation.each do |name, details|
+        # TODO: for `type` need to dig into "using" if it's a sub-entity exposure
+        # TODO: ideally, if defined?(ActiveRecord) we could try digging into entity columns/relations to detect tupe
+        type, desc, = details.values_at(:type, :desc)
+        @out.puts ENTITY_TABLE.format(name.to_s, type.to_s, desc.to_s)
+      end
+
+      @out.puts
     end
 
     def write_routes!
@@ -72,7 +94,13 @@ module Grape
     end
 
     def write_route_retval!(route)
-      # TODO: route retval type, if specified (link to entity header, but only if defined?(Grape::Entity))
+      entity = route.try(&:entity)
+      return unless entity
+
+      array_prefix = 'List of ' if route.settings.dig(:description, :is_array)
+
+      @out.puts "Returns: #{array_prefix}[#{entity.name}](##{identifier(entity.name)})"
+      @out.puts
     end
 
     def write_route_params!(route)
@@ -80,7 +108,7 @@ module Grape
     end
 
     def identifier(str)
-      str.underscore.dasherize.gsub(/[^0-9a-z-]/, '-')
+      str.downcase.gsub(/[^0-9a-z-]/, '-')
     end
   end
 end

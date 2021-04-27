@@ -14,7 +14,7 @@ end
 ```ruby
 # Rakefile
 begin
-  require 'grape-apidoc'
+  require 'grape/apidoc'
   Grape::Apidoc::RakeTask.new(:apidoc, root_api_class: Grape::App) # point it to the top-level API class
 rescue LoadError
   nil # so it does not fail in non-development environment

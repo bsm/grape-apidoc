@@ -20,3 +20,25 @@ rescue LoadError
   nil # so it does not fail in non-development environment
 end
 ```
+
+## Supported idioms
+
+```ruby
+class SomeAPI < Grape::API do
+  prefix 'api'
+  version 'v1'
+
+  desc 'List Foos' do
+    success Mock::Foo::Entity
+    is_array true
+    security required: %w[foo/bar.baz foo/bar.qux]
+  end
+  params do
+    optional :normal
+    optional :nested, type: Hash do
+      optional :sub
+    end
+  end
+  get('/foos') { [Mock::Foo.new(foo_id: 1)] }
+end
+```

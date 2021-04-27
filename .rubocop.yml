@@ -1,0 +1,10 @@
+inherit_gem:
+  rubocop-bsm:
+    - default.yml
+inherit_mode:
+  merge:
+    - Exclude
+
+Naming/FileName:
+  Exclude:
+    - lib/grape-apidoc.rb

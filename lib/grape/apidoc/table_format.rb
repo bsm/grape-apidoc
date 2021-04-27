@@ -1,9 +1,10 @@
 # column cell widths
 class Grape::Apidoc::TableFormat < Array
   def format(*values)
-    str = '| '
+    str = '|'
 
     each_with_index do |width, index|
+      str << ' '
       str << (values[index] || '').ljust(width)
       str << ' |'
     end
@@ -12,9 +13,10 @@ class Grape::Apidoc::TableFormat < Array
   end
 
   def separator
-    str = '| '
+    str = '|'
 
     each_with_index do |width, _index|
+      str << ' '
       str << '-' * width
       str << ' |'
     end

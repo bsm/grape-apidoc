@@ -29,31 +29,7 @@ RSpec.describe Grape::Apidoc do
     apidoc.write!
   end
 
-  xit 'should detect root api class unless provided' # TODO: maybe make that method public
-
-  it 'documents routes' do
-    expect(doc.string).to include("## GET /api/v1/foos\n\nList Foos\n\n")
-    expect(doc.string).to include("## GET /api/v1/bars/:id\n\nGet Bar\n\n")
-  end
-
-  xit 'should document route permissions' # assert perms
-
-  it 'documents route return value' do
-    expect(doc.string).to include("Returns: List of [Mock::Foo::Entity](#mock--foo--entity)\n\n")
-    expect(doc.string).to include("Returns: [Mock::Bar::Entity](#mock--bar--entity)\n\n")
-  end
-
-  xit 'should document route params' # assert params
-
-  it 'documents entities' do
-    expect(doc.string).to include("## Mock::Foo::Entity\n\n")
-    expect(doc.string).to include("## Mock::Bar::Entity\n\n")
-  end
-
-  it 'documents entity fields' do
-    # TODO: maybe assert ActiveRecord types (incl. enums) later
-    expect(doc.string).to match(/\| Field\s* \| Type\s* | Description\s* |\n/)
-    expect(doc.string).to match(/\| foo_id\s* \| Integer\s* | Foo ID\s* |\n/)
-    expect(doc.string).to match(/\| bar_id\s* \| Integer\s* | Bar ID\s* |\n/)
+  it 'documents api' do
+    expect(doc.string.strip).to eq(File.read('spec/fixtures/golden.md').strip)
   end
 end

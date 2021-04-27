@@ -14,32 +14,30 @@
 
 # Routes
 
+## GET /api/v1/foos
+
+List Foos
+
+- **Returns**: List of [Mock::Foo::Entity](#mock--foo--entity)
+- **Security**: required: ["foo/bar.baz", "foo/bar.qux"]
+
+**Accepts**:
+
+| Field                | Type       | Description                              |
+| -------------------- | ---------- | ---------------------------------------- |
+| normal               | N/A        | required: false                          |
+| nested               | Hash       | required: false                          |
+| nested[sub]          | N/A        | required: false                          |
+
 ## GET /api/v1/bars/:id
 
 Get Bar
 
-Required permissions: none.
+- **Returns**: [Mock::Bar::Entity](#mock--bar--entity)
 
-Returns: [Mock::Bar::Entity](#mock--bar--entity)
-
-Accepts:
+**Accepts**:
 
 | Field                | Type       | Description                              |
 | -------------------- | ---------- | ---------------------------------------- |
 | id                   | N/A        |                                          |
 
-## GET /api/v1/foos
-
-List Foos
-
-Required permissions: `foo/bar.baz`, `foo/bar.qux`
-
-Returns: List of [Mock::Foo::Entity](#mock--foo--entity)
-
-Accepts:
-
-| Field                | Type       | Description                              |
-| -------------------- | ---------- | ---------------------------------------- |
-| nested               | Hash       | required: false                          |
-| nested[sub]          | N/A        | required: false                          |
-| normal               | N/A        | required: false                          |

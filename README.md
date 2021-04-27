@@ -21,7 +21,7 @@ rescue LoadError
 end
 ```
 
-## Supported idioms
+## API example
 
 ```ruby
 class SomeAPI < Grape::API do

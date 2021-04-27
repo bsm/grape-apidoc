@@ -31,47 +31,51 @@ module Grape
       @out.puts '# Entities'
       @out.puts
 
-      @api.routes.map(&:entity).compact.sort_by(&:name).each do |entity|
+      @api.routes.filter_map(&:entity).sort_by(&:name).each do |entity|
         write_entity_header!(entity)
+        @out.puts
+
         write_entity_fields!(entity)
+        @out.puts
       end
     end
 
     def write_entity_header!(entity)
       @out.puts "## #{entity.name}"
-      @out.puts
     end
 
     def write_entity_fields!(entity)
       unless entity.documentation.present?
         @out.puts 'No fields exposed.'
-        @out.puts
         return
       end
 
       @out.puts FIELDS_TABLE.format('Field', 'Type', 'Description')
       @out.puts FIELDS_TABLE.separator
 
-      entity.documentation.keys.sort.each do |name|
-        details = entity.documentation[name]
+      entity.documentation.each do |name, details|
         # Problem: it's pretty much impossible to match Entity to model to dig column types.
         # Need to either enforce some requirements for organizing API or give up.
         type, desc, = details.values_at(:type, :desc)
         @out.puts FIELDS_TABLE.format(name.to_s, type.to_s, desc.to_s)
       end
-
-      @out.puts
     end
 
     def write_routes!
       @out.puts '# Routes'
       @out.puts
 
-      @api.routes.sort_by(&:path).each do |route|
+      @api.routes.each do |route|
         write_route_header!(route)
-        write_route_perms!(route)
+        @out.puts
+
+        # list items:
         write_route_retval!(route)
+        write_route_security!(route)
+        @out.puts
+
         write_route_params!(route)
+        @out.puts
       end
     end
 
@@ -81,26 +85,20 @@ module Grape
                   .sub(':version', route.version.to_s)
                   .sub('(.:format)', '')
       @out.puts "## #{method} #{path}"
-      @out.puts
 
       return unless route.description.present?
 
-      @out.puts route.description
       @out.puts
+      @out.puts route.description
     end
 
-    def write_route_perms!(route)
-      # BSM-specific:
-      perms = route.settings.dig(:description, :security, :required)
-      unless perms.present?
-        @out.puts 'Required permissions: none.'
-        @out.puts
-        return
-      end
+    def write_route_security!(route)
+      security = route.settings.dig(:description, :security)
+      return unless security.present?
 
-      perms_desc = perms.map {|perm| "`#{perm}`" }.join(', ')
-      @out.puts "Required permissions: #{perms_desc}"
-      @out.puts
+      security_desc = security.map {|k, v| "#{k}: #{v.inspect}" }.join(', ')
+
+      @out.puts "- **Security**: #{security_desc}"
     end
 
     def write_route_retval!(route)
@@ -109,26 +107,22 @@ module Grape
 
       array_prefix = 'List of ' if route.settings.dig(:description, :is_array)
 
-      @out.puts "Returns: #{array_prefix}[#{entity.name}](##{identifier(entity.name)})"
-      @out.puts
+      @out.puts "- **Returns**: #{array_prefix}[#{entity.name}](##{identifier(entity.name)})"
     end
 
     def write_route_params!(route)
       unless route.params.present?
-        @out.puts 'Accepts: no params.'
-        @out.puts
+        @out.puts '**Accepts**: no params.'
         return
       end
 
-      @out.puts 'Accepts:'
+      @out.puts '**Accepts**:'
       @out.puts
 
       @out.puts FIELDS_TABLE.format('Field', 'Type', 'Description')
       @out.puts FIELDS_TABLE.separator
 
-      route.params.keys.sort.each do |name|
-        details = route.params[name]
-
+      route.params.each do |name, details|
         # route.params includes path params as well, like `id => ''`
         # (not a hash, like normal params):
         details = {} unless details.is_a?(Hash)
@@ -140,8 +134,6 @@ module Grape
         desc = details.except(:type).map {|k, v| "#{k}: #{v}" }.join(', ')
         @out.puts FIELDS_TABLE.format(name.to_s, type, desc)
       end
-
-      @out.puts
     end
 
     def identifier(str)

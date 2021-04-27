@@ -13,6 +13,7 @@ RSpec.describe Grape::Apidoc do
       desc 'List Foos' do
         success Mock::Foo::Entity
         is_array true
+        security required: %w[foo/bar.baz foo/bar.qux]
       end
       params do
         optional :normal

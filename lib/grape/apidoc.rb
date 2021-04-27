@@ -90,7 +90,17 @@ module Grape
     end
 
     def write_route_perms!(route)
-      # TODO: dig into route into perms config
+      # BSM-specific:
+      perms = route.settings.dig(:description, :security, :required)
+      unless perms.present?
+        @out.puts 'Required permissions: none.'
+        @out.puts
+        return
+      end
+
+      perms_desc = perms.map {|perm| "`#{perm}`" }.join(', ')
+      @out.puts "Required permissions: #{perms_desc}"
+      @out.puts
     end
 
     def write_route_retval!(route)
@@ -105,7 +115,7 @@ module Grape
 
     def write_route_params!(route)
       unless route.params.present?
-        @out.puts 'No params accepted.'
+        @out.puts 'Accepts: no params.'
         @out.puts
         return
       end

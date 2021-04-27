@@ -18,6 +18,8 @@
 
 Get Bar
 
+Required permissions: none.
+
 Returns: [Mock::Bar::Entity](#mock--bar--entity)
 
 Accepts:
@@ -29,6 +31,8 @@ Accepts:
 ## GET /api/v1/foos
 
 List Foos
+
+Required permissions: `foo/bar.baz`, `foo/bar.qux`
 
 Returns: List of [Mock::Foo::Entity](#mock--foo--entity)
 

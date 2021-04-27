@@ -54,10 +54,17 @@ module Grape
 
     def write_route_header!(route)
       method = route.request_method
-      path   = route.path.sub(':version', route.version.to_s)
+      path = route.path
+                  .sub(':version', route.version.to_s)
+                  .sub('(.:format)', '')
       @out.puts "## #{method} #{path}"
       @out.puts
-      # TODO: dig into settings and write route description
+
+      desc = route.settings.dig(:description, :description)
+      return unless desc.present?
+
+      @out.puts desc
+      @out.puts
     end
 
     def write_route_perms!(route)

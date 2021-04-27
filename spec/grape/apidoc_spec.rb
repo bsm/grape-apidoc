@@ -27,8 +27,8 @@ RSpec.describe Grape::Apidoc do
   xit 'should detect root api class unless provided' # TODO: maybe make that method public
 
   it 'documents routes' do
-    expect(doc.string).to include('## GET /api/v1/foos')
-    expect(doc.string).to include('## GET /api/v1/bars/:id')
+    expect(doc.string).to include("## GET /api/v1/foos\n\nList Foos\n\n")
+    expect(doc.string).to include("## GET /api/v1/bars/:id\n\nGet Bar\n\n")
   end
 
   xit 'should document route permissions' # assert perms

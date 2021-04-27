@@ -4,3 +4,7 @@ inherit_gem:
 inherit_mode:
   merge:
     - Exclude
+
+Naming/FileName:
+  Exclude:
+    - lib/grape-apidoc.rb

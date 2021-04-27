@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.authors     = ['Black Square Media Ltd.']
   s.email       = ['info@blacksquaremedia.com']
   s.summary     = 'Markdown documentation for Grape APIs'
-  s.description = 'github.com/ruby/rake task to generate markdown documentation for github.com/ruby-grape/grape + github.com/ruby-grape/grape-entity based APIs'
+  s.description = 'github.com/ruby/rake task to generate Markdown documentation for github.com/ruby-grape/grape + github.com/ruby-grape/grape-entity based APIs'
   s.homepage    = 'https://github.com/bsm/grape-apidoc'
   s.license     = 'Apache-2.0'
 
@@ -13,8 +13,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
   s.required_ruby_version = '>= 3.0'
 
-  # s.add_dependency 'activerecord'
-  # s.add_dependency 'activesupport'
+  s.add_dependency 'grape'
 
   s.add_development_dependency 'bundler'
   s.add_development_dependency 'rake'

@@ -3,7 +3,7 @@ module Grape
     autoload :RakeTask, 'grape/apidoc/rake_task'
     autoload :TableFormat, 'grape/apidoc/table_format'
 
-    ENTITY_TABLE = TableFormat.new([20, 10, 40]).freeze
+    FIELDS_TABLE = TableFormat.new([20, 10, 40]).freeze # Field, Type, Description
 
     def initialize(root_api_class = nil, output: $stdout)
       @api = root_api_class || detect_root_api_class
@@ -49,14 +49,15 @@ module Grape
         return
       end
 
-      @out.puts ENTITY_TABLE.format('Field', 'Type', 'Description')
-      @out.puts ENTITY_TABLE.separator
+      @out.puts FIELDS_TABLE.format('Field', 'Type', 'Description')
+      @out.puts FIELDS_TABLE.separator
 
-      entity.documentation.each do |name, details|
-        # TODO: for `type` need to dig into "using" if it's a sub-entity exposure
-        # TODO: ideally, if defined?(ActiveRecord) we could try digging into entity columns/relations to detect tupe
+      entity.documentation.keys.sort.each do |name|
+        details = entity.documentation[name]
+        # Problem: it's pretty much impossible to match Entity to model to dig column types.
+        # Need to either enforce some requirements for organizing API or give up.
         type, desc, = details.values_at(:type, :desc)
-        @out.puts ENTITY_TABLE.format(name.to_s, type.to_s, desc.to_s)
+        @out.puts FIELDS_TABLE.format(name.to_s, type.to_s, desc.to_s)
       end
 
       @out.puts
@@ -82,10 +83,9 @@ module Grape
       @out.puts "## #{method} #{path}"
       @out.puts
 
-      desc = route.settings.dig(:description, :description)
-      return unless desc.present?
+      return unless route.description.present?
 
-      @out.puts desc
+      @out.puts route.description
       @out.puts
     end
 
@@ -104,7 +104,34 @@ module Grape
     end
 
     def write_route_params!(route)
-      # TODO: accepted route params (dig into entity for types/descriptions etc)
+      unless route.params.present?
+        @out.puts 'No params accepted.'
+        @out.puts
+        return
+      end
+
+      @out.puts 'Accepts:'
+      @out.puts
+
+      @out.puts FIELDS_TABLE.format('Field', 'Type', 'Description')
+      @out.puts FIELDS_TABLE.separator
+
+      route.params.keys.sort.each do |name|
+        details = route.params[name]
+
+        # route.params includes path params as well, like `id => ''`
+        # (not a hash, like normal params):
+        details = {} unless details.is_a?(Hash)
+
+        # Problem: it's pretty much impossible to match Entity to model to dig column types.
+        # Problem: it's not guaranteed that Entity exposures match params.
+        # Need to either enforce some requirements for organizing API or give up.
+        type = details[:type] || 'N/A'
+        desc = details.except(:type).map {|k, v| "#{k}: #{v}" }.join(', ')
+        @out.puts FIELDS_TABLE.format(name.to_s, type, desc)
+      end
+
+      @out.puts
     end
 
     def identifier(str)

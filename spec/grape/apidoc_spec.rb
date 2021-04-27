@@ -14,6 +14,12 @@ RSpec.describe Grape::Apidoc do
         success Mock::Foo::Entity
         is_array true
       end
+      params do
+        optional :normal
+        optional :nested, type: Hash do
+          optional :sub
+        end
+      end
       get('/foos') { [Mock::Foo.new(foo_id: 1)] }
 
       desc 'Get Bar' do

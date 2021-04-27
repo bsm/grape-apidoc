@@ -20,8 +20,22 @@ Get Bar
 
 Returns: [Mock::Bar::Entity](#mock--bar--entity)
 
+Accepts:
+
+| Field                | Type       | Description                              |
+| -------------------- | ---------- | ---------------------------------------- |
+| id                   | N/A        |                                          |
+
 ## GET /api/v1/foos
 
 List Foos
 
 Returns: List of [Mock::Foo::Entity](#mock--foo--entity)
+
+Accepts:
+
+| Field                | Type       | Description                              |
+| -------------------- | ---------- | ---------------------------------------- |
+| nested               | Hash       | required: false                          |
+| nested[sub]          | N/A        | required: false                          |
+| normal               | N/A        | required: false                          |

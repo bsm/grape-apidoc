@@ -1,6 +1,9 @@
 module Grape
   class Apidoc
-    autoload :RakeTask, './rake_task'
+    autoload :RakeTask, 'grape/apidoc/rake_task'
+    autoload :TableFormat, 'grape/apidoc/table_format'
+
+    FIELDS_TABLE = TableFormat.new([20, 10, 40]).freeze # Field, Type, Description
 
     def initialize(root_api_class = nil, output: $stdout)
       @api = root_api_class || detect_root_api_class
@@ -15,6 +18,9 @@ module Grape
     private
 
     def detect_root_api_class
+      # performance shortcut for https://github.com/bsm/grape-app/
+      return Grape::App if defined?(Grape::App)
+
       # droot api is the one with largest route count:
       Grape::API.descendants.max do |a, b|
         a.try(:routes)&.count <=> b.try(:routes)&.count
@@ -25,30 +31,51 @@ module Grape
       @out.puts '# Entities'
       @out.puts
 
-      Grape::Entity.descendants.sort_by(&:name).each do |entity|
+      @api.routes.filter_map(&:entity).sort_by(&:name).each do |entity|
         write_entity_header!(entity)
+        @out.puts
+
         write_entity_fields!(entity)
+        @out.puts
       end
     end
 
     def write_entity_header!(entity)
       @out.puts "## #{entity.name}"
-      @out.puts
     end
 
     def write_entity_fields!(entity)
-      # TODO: dig into and write entity fields, maybe as table
+      unless entity.documentation.present?
+        @out.puts 'No fields exposed.'
+        return
+      end
+
+      @out.puts FIELDS_TABLE.format('Field', 'Type', 'Description')
+      @out.puts FIELDS_TABLE.separator
+
+      entity.documentation.each do |name, details|
+        # Problem: it's pretty much impossible to match Entity to model to dig column types.
+        # Need to either enforce some requirements for organizing API or give up.
+        type, desc, = details.values_at(:type, :desc)
+        @out.puts FIELDS_TABLE.format(name.to_s, type.to_s, desc.to_s)
+      end
     end
 
     def write_routes!
       @out.puts '# Routes'
       @out.puts
 
-      @api.routes.sort_by(&:path).each do |route|
+      @api.routes.each do |route|
         write_route_header!(route)
-        write_route_perms!(route)
+        @out.puts
+
+        # list items:
         write_route_retval!(route)
+        write_route_security!(route)
+        @out.puts
+
         write_route_params!(route)
+        @out.puts
       end
     end
 
@@ -58,29 +85,59 @@ module Grape
                   .sub(':version', route.version.to_s)
                   .sub('(.:format)', '')
       @out.puts "## #{method} #{path}"
-      @out.puts
 
-      desc = route.settings.dig(:description, :description)
-      return unless desc.present?
+      return unless route.description.present?
 
-      @out.puts desc
       @out.puts
+      @out.puts route.description
     end
 
-    def write_route_perms!(route)
-      # TODO: dig into route into perms config
+    def write_route_security!(route)
+      security = route.settings.dig(:description, :security)
+      return unless security.present?
+
+      security_desc = security.map {|k, v| "#{k}: #{v.inspect}" }.join(', ')
+
+      @out.puts "- **Security**: #{security_desc}"
     end
 
     def write_route_retval!(route)
-      # TODO: route retval type, if specified (link to entity header, but only if defined?(Grape::Entity))
+      entity = route.try(&:entity)
+      return unless entity
+
+      array_prefix = 'List of ' if route.settings.dig(:description, :is_array)
+
+      @out.puts "- **Returns**: #{array_prefix}[#{entity.name}](##{identifier(entity.name)})"
     end
 
     def write_route_params!(route)
-      # TODO: accepted route params (dig into entity for types/descriptions etc)
+      unless route.params.present?
+        @out.puts '**Accepts**: no params.'
+        return
+      end
+
+      @out.puts '**Accepts**:'
+      @out.puts
+
+      @out.puts FIELDS_TABLE.format('Field', 'Type', 'Description')
+      @out.puts FIELDS_TABLE.separator
+
+      route.params.each do |name, details|
+        # route.params includes path params as well, like `id => ''`
+        # (not a hash, like normal params):
+        details = {} unless details.is_a?(Hash)
+
+        # Problem: it's pretty much impossible to match Entity to model to dig column types.
+        # Problem: it's not guaranteed that Entity exposures match params.
+        # Need to either enforce some requirements for organizing API or give up.
+        type = details[:type] || 'N/A'
+        desc = details.except(:type).map {|k, v| "#{k}: #{v}" }.join(', ')
+        @out.puts FIELDS_TABLE.format(name.to_s, type, desc)
+      end
     end
 
     def identifier(str)
-      str.underscore.dasherize.gsub(/[^0-9a-z-]/, '-')
+      str.downcase.gsub(/[^0-9a-z-]/, '-')
     end
   end
 end

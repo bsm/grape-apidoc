@@ -14,9 +14,31 @@ end
 ```ruby
 # Rakefile
 begin
-  require 'grape-apidoc'
+  require 'grape/apidoc'
   Grape::Apidoc::RakeTask.new(:apidoc, root_api_class: Grape::App) # point it to the top-level API class
 rescue LoadError
   nil # so it does not fail in non-development environment
+end
+```
+
+## API example
+
+```ruby
+class SomeAPI < Grape::API do
+  prefix 'api'
+  version 'v1'
+
+  desc 'List Foos' do
+    success Mock::Foo::Entity
+    is_array true
+    security required: %w[foo/bar.baz foo/bar.qux]
+  end
+  params do
+    optional :normal
+    optional :nested, type: Hash do
+      optional :sub
+    end
+  end
+  get('/foos') { [Mock::Foo.new(foo_id: 1)] }
 end
 ```

@@ -46,7 +46,7 @@ module Grape
 
     def write_entity_fields!(entity)
       unless entity.documentation.present?
-        @out.puts 'No fields exposed.'
+        @out.puts '*No fields exposed.*'
         return
       end
 
@@ -57,6 +57,7 @@ module Grape
         # Problem: it's pretty much impossible to match Entity to model to dig column types.
         # Need to either enforce some requirements for organizing API or give up.
         type, desc, = details.values_at(:type, :desc)
+        type = "[#{type}]" if details[:is_array]
         @out.puts FIELDS_TABLE.format(name.to_s, type.to_s, desc.to_s)
       end
     end
@@ -111,15 +112,12 @@ module Grape
     end
 
     def write_route_params!(route)
-      unless route.params.present?
-        @out.puts '**Accepts**: no params.'
-        return
-      end
+      return unless route.params.present?
 
-      @out.puts '**Accepts**:'
+      @out.puts '**Parameters**:'
       @out.puts
 
-      @out.puts FIELDS_TABLE.format('Field', 'Type', 'Description')
+      @out.puts FIELDS_TABLE.format('Parameter', 'Type', 'Description')
       @out.puts FIELDS_TABLE.separator
 
       route.params.each do |name, details|
@@ -130,7 +128,7 @@ module Grape
         # Problem: it's pretty much impossible to match Entity to model to dig column types.
         # Problem: it's not guaranteed that Entity exposures match params.
         # Need to either enforce some requirements for organizing API or give up.
-        type = details[:type] || 'N/A'
+        type = details[:type] || ''
         desc = details.except(:type).map {|k, v| "#{k}: #{v}" }.join(', ')
         @out.puts FIELDS_TABLE.format(name.to_s, type, desc)
       end

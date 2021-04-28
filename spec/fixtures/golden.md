@@ -5,6 +5,7 @@
 | Field                | Type       | Description                              |
 | -------------------- | ---------- | ---------------------------------------- |
 | bar_id               | Integer    | Bar ID                                   |
+| foos                 | [Object]   | Associated Foos                          |
 
 ## Mock::Foo::Entity
 
@@ -21,23 +22,24 @@ List Foos
 - **Returns**: List of [Mock::Foo::Entity](#mock--foo--entity)
 - **Security**: required: ["foo/bar.baz", "foo/bar.qux"]
 
-**Accepts**:
+**Parameters**:
 
-| Field                | Type       | Description                              |
+| Parameter            | Type       | Description                              |
 | -------------------- | ---------- | ---------------------------------------- |
-| normal               | N/A        | required: false                          |
-| nested               | Hash       | required: false                          |
-| nested[sub]          | N/A        | required: false                          |
+| filter               | Array      | required: false                          |
+| filter[foo_id]       | [Integer]  | required: false                          |
 
-## GET /api/v1/bars/:id
+## POST /api/v1/bars/:id
 
-Get Bar
+Create Bar
 
 - **Returns**: [Mock::Bar::Entity](#mock--bar--entity)
 
-**Accepts**:
+**Parameters**:
 
-| Field                | Type       | Description                              |
+| Parameter            | Type       | Description                              |
 | -------------------- | ---------- | ---------------------------------------- |
-| id                   | N/A        |                                          |
+| foos                 | [JSON]     | required: false                          |
+| foos[foo_id]         | Integer    | required: false                          |
+| id                   |            |                                          |
 

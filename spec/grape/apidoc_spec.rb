@@ -16,17 +16,26 @@ RSpec.describe Grape::Apidoc do
         security required: %w[foo/bar.baz foo/bar.qux]
       end
       params do
-        optional :normal
-        optional :nested, type: Hash do
-          optional :sub
+        optional :filter, type: Array do
+          optional :foo_id, type: [Integer]
         end
       end
       get('/foos') { [Mock::Foo.new(foo_id: 1)] }
 
-      desc 'Get Bar' do
+      desc 'Create Bar' do
         success Mock::Bar::Entity
       end
-      get('/bars/:id') { Mock::Bar.new(bar_id: 2) }
+      params do
+        optional :foos, type: Array[JSON] do
+          optional :foo_id, type: Integer
+        end
+      end
+      post('/bars/:id') do
+        Mock::Bar.new(
+          bar_id: 2,
+          foos: [Mock::Foo.new(foo_id: 1)],
+        )
+      end
     end
   end
 

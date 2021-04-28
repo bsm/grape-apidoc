@@ -13,9 +13,12 @@ module Mock
     expose :foo_id, documentation: { type: 'Integer', desc: 'Foo ID' }
   end
 
-  Bar = Struct.new(:bar_id)
+  Bar = Struct.new(:bar_id, :foos)
 
   class Bar::Entity < Grape::Entity
     expose :bar_id, documentation: { type: 'Integer', desc: 'Bar ID' }
+    expose :foos,
+           using: Mock::Foo::Entity,
+           documentation: { type: 'Object', is_array: true, desc: 'Associated Foos' }
   end
 end

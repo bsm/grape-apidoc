@@ -21,7 +21,7 @@ module Grape
       # performance shortcut for https://github.com/bsm/grape-app/
       return Grape::App if defined?(Grape::App)
 
-      # droot api is the one with largest route count:
+      # root api is the one with largest route count:
       Grape::API.descendants.max do |a, b|
         a.try(:routes)&.count <=> b.try(:routes)&.count
       end
@@ -41,12 +41,12 @@ module Grape
     end
 
     def write_entity_header!(entity)
-      @out.puts "## #{entity.name}"
+      @out.puts "## #{entity_name(entity)}"
     end
 
     def write_entity_fields!(entity)
       unless entity.documentation.present?
-        @out.puts 'No fields exposed.'
+        @out.puts '*No fields exposed.*'
         return
       end
 
@@ -57,6 +57,7 @@ module Grape
         # Problem: it's pretty much impossible to match Entity to model to dig column types.
         # Need to either enforce some requirements for organizing API or give up.
         type, desc, = details.values_at(:type, :desc)
+        type = "[#{type}]" if details[:is_array]
         @out.puts FIELDS_TABLE.format(name.to_s, type.to_s, desc.to_s)
       end
     end
@@ -96,9 +97,9 @@ module Grape
       security = route.settings.dig(:description, :security)
       return unless security.present?
 
-      security_desc = security.map {|k, v| "#{k}: #{v.inspect}" }.join(', ')
+      security_desc = security.map {|k, v| "#{k}=#{v.inspect}" }.join(' ')
 
-      @out.puts "- **Security**: #{security_desc}"
+      @out.puts "- **Security**: `#{security_desc}`"
     end
 
     def write_route_retval!(route)
@@ -107,19 +108,17 @@ module Grape
 
       array_prefix = 'List of ' if route.settings.dig(:description, :is_array)
 
-      @out.puts "- **Returns**: #{array_prefix}[#{entity.name}](##{identifier(entity.name)})"
+      name = entity_name(entity)
+      @out.puts "- **Returns**: #{array_prefix}[#{name}](##{identifier(name)})"
     end
 
     def write_route_params!(route)
-      unless route.params.present?
-        @out.puts '**Accepts**: no params.'
-        return
-      end
+      return unless route.params.present?
 
-      @out.puts '**Accepts**:'
+      @out.puts '**Parameters**:'
       @out.puts
 
-      @out.puts FIELDS_TABLE.format('Field', 'Type', 'Description')
+      @out.puts FIELDS_TABLE.format('Parameter', 'Type', 'Description')
       @out.puts FIELDS_TABLE.separator
 
       route.params.each do |name, details|
@@ -130,7 +129,7 @@ module Grape
         # Problem: it's pretty much impossible to match Entity to model to dig column types.
         # Problem: it's not guaranteed that Entity exposures match params.
         # Need to either enforce some requirements for organizing API or give up.
-        type = details[:type] || 'N/A'
+        type = details[:type] || ''
         desc = details.except(:type).map {|k, v| "#{k}: #{v}" }.join(', ')
         @out.puts FIELDS_TABLE.format(name.to_s, type, desc)
       end
@@ -138,6 +137,10 @@ module Grape
 
     def identifier(str)
       str.downcase.gsub(/[^0-9a-z-]/, '-')
+    end
+
+    def entity_name(entity)
+      entity.name.gsub(/(?:::)?Entity\Z/, '').gsub('::', ':')
     end
   end
 end

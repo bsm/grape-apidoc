@@ -46,7 +46,7 @@ RSpec.describe Grape::Apidoc do
   end
 
   it 'documents api' do
-    File.write('spec/fixtures/golden.md', doc.string)
+    # File.write('spec/fixtures/golden.md', doc.string)
     expect(doc.string.strip).to eq(File.read('spec/fixtures/golden.md').strip)
   end
 end

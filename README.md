@@ -42,7 +42,6 @@ module Mock
 end
 ```
 
-
 ```ruby
 class SomeAPI < Grape::API do
   prefix 'api'
@@ -76,3 +75,5 @@ class SomeAPI < Grape::API do
   end
 end
 ```
+
+Example of produced apidoc for this app: [spec/fixtures/golden.md](spec/fixtures/golden.md)

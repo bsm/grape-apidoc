@@ -21,7 +21,7 @@ module Grape
       # performance shortcut for https://github.com/bsm/grape-app/
       return Grape::App if defined?(Grape::App)
 
-      # droot api is the one with largest route count:
+      # root api is the one with largest route count:
       Grape::API.descendants.max do |a, b|
         a.try(:routes)&.count <=> b.try(:routes)&.count
       end
@@ -41,7 +41,7 @@ module Grape
     end
 
     def write_entity_header!(entity)
-      @out.puts "## #{entity.name}"
+      @out.puts "## #{entity_name(entity)}"
     end
 
     def write_entity_fields!(entity)
@@ -108,7 +108,8 @@ module Grape
 
       array_prefix = 'List of ' if route.settings.dig(:description, :is_array)
 
-      @out.puts "- **Returns**: #{array_prefix}[#{entity.name}](##{identifier(entity.name)})"
+      name = entity_name(entity)
+      @out.puts "- **Returns**: #{array_prefix}[#{name}](##{identifier(name)})"
     end
 
     def write_route_params!(route)
@@ -136,6 +137,10 @@ module Grape
 
     def identifier(str)
       str.downcase.gsub(/[^0-9a-z-]/, '-')
+    end
+
+    def entity_name(entity)
+      entity.name.gsub(/(?:::)?Entity\Z/, '')
     end
   end
 end

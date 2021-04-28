@@ -1,13 +1,13 @@
 # Entities
 
-## Mock::Bar
+## Mock:Bar
 
 | Field                | Type       | Description                              |
 | -------------------- | ---------- | ---------------------------------------- |
 | bar_id               | Integer    | Bar ID                                   |
 | foos                 | [Object]   | Associated Foos                          |
 
-## Mock::Foo
+## Mock:Foo
 
 | Field                | Type       | Description                              |
 | -------------------- | ---------- | ---------------------------------------- |
@@ -19,7 +19,7 @@
 
 List Foos
 
-- **Returns**: List of [Mock::Foo](#mock--foo)
+- **Returns**: List of [Mock:Foo](#mock-foo)
 - **Security**: `required=["foo/bar.baz", "foo/bar.qux"]`
 
 **Parameters**:
@@ -33,7 +33,7 @@ List Foos
 
 Create Bar
 
-- **Returns**: [Mock::Bar](#mock--bar)
+- **Returns**: [Mock:Bar](#mock-bar)
 
 **Parameters**:
 

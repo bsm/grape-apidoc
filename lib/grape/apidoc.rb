@@ -140,7 +140,7 @@ module Grape
     end
 
     def entity_name(entity)
-      entity.name.gsub(/(?:::)?Entity\Z/, '')
+      entity.name.gsub(/(?:::)?Entity\Z/, '').gsub('::', ':')
     end
   end
 end

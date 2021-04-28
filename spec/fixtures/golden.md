@@ -20,7 +20,7 @@
 List Foos
 
 - **Returns**: List of [Mock::Foo](#mock--foo)
-- **Security**: required: ["foo/bar.baz", "foo/bar.qux"]
+- **Security**: `required=["foo/bar.baz", "foo/bar.qux"]`
 
 **Parameters**:
 

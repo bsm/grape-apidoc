@@ -97,9 +97,9 @@ module Grape
       security = route.settings.dig(:description, :security)
       return unless security.present?
 
-      security_desc = security.map {|k, v| "#{k}: #{v.inspect}" }.join(', ')
+      security_desc = security.map {|k, v| "#{k}=#{v.inspect}" }.join(' ')
 
-      @out.puts "- **Security**: #{security_desc}"
+      @out.puts "- **Security**: `#{security_desc}`"
     end
 
     def write_route_retval!(route)

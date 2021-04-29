@@ -86,8 +86,10 @@ module Grape
         # fall back to `using:...`
         unless type
           via = exposure.try(:using_class_name)
-          via_name = entity_name(via) if via
-          type = "[#{via_name}](##{identifier(via_name)})"
+          if via
+            via_name = entity_name(via)
+            type = "[#{via_name}](##{identifier(via_name)})"
+          end
         end
 
         type = "[#{type}]" if doc[:is_array]

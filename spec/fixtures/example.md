@@ -17,7 +17,7 @@
 | Field                | Type       | Description                              |
 | -------------------- | ---------- | ---------------------------------------- |
 | email                | String     | User Email                               |
-| roles                | [[Example:Role](#example-role)] | User Roles                               |
+| roles                | [[Example:Role](#examplerole)] | User Roles                               |
 
 # Routes
 
@@ -25,7 +25,7 @@
 
 List Users
 
-- **Returns**: List of [Example:User](#example-user)
+- **Returns**: List of [Example:User](#exampleuser)
 - **Security**: `required=["admin/users.read"]`
 
 **Parameters**:
@@ -39,7 +39,7 @@ List Users
 
 Update User
 
-- **Returns**: [Example:User:Full](#example-user-full)
+- **Returns**: [Example:User:Full](#exampleuserfull)
 
 **Parameters**:
 

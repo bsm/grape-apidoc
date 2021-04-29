@@ -1,23 +1,23 @@
 # Entities
 
-## Mock:Role
+## Example:Role
 
 | Field                | Type       | Description                              |
 | -------------------- | ---------- | ---------------------------------------- |
 | name                 | String     | Role Name                                |
 
-## Mock:User
+## Example:User
 
 | Field                | Type       | Description                              |
 | -------------------- | ---------- | ---------------------------------------- |
 | email                | String     | User Email                               |
 
-## Mock:User:Full
+## Example:User:Full
 
 | Field                | Type       | Description                              |
 | -------------------- | ---------- | ---------------------------------------- |
 | email                | String     | User Email                               |
-| roles                | [[Mock:Role](#mock-role)] | User Roles                               |
+| roles                | [[Example:Role](#example-role)] | User Roles                               |
 
 # Routes
 
@@ -25,7 +25,7 @@
 
 List Users
 
-- **Returns**: List of [Mock:User](#mock-user)
+- **Returns**: List of [Example:User](#example-user)
 - **Security**: `required=["admin/users.read"]`
 
 **Parameters**:
@@ -39,7 +39,7 @@ List Users
 
 Update User
 
-- **Returns**: [Mock:User:Full](#mock-user-full)
+- **Returns**: [Example:User:Full](#example-user-full)
 
 **Parameters**:
 

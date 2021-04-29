@@ -23,5 +23,5 @@ end
 
 ## Examples
 
-- API: [spec/scenario/mock_project.rb](spec/scenario/mock_project.rb)
-- Resulting doc: [spec/fixtures/mock_project.md](spec/fixtures/mock_project.md)
+- API: [spec/scenario/example.rb](spec/scenario/example.rb)
+- Resulting doc: [spec/fixtures/example.md](spec/fixtures/example.md)

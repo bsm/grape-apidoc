@@ -1,4 +1,4 @@
-module Mock
+module Example
   Role = Struct.new(:name)
   User = Struct.new(:email, :roles)
 

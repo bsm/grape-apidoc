@@ -1,45 +1,51 @@
 # Entities
 
-## Mock:Bar
+## Mock:Role
 
 | Field                | Type       | Description                              |
 | -------------------- | ---------- | ---------------------------------------- |
-| bar_id               | Integer    | Bar ID                                   |
-| foos                 | [Object]   | Associated Foos                          |
+| name                 | String     | Role Name                                |
 
-## Mock:Foo
+## Mock:User
 
 | Field                | Type       | Description                              |
 | -------------------- | ---------- | ---------------------------------------- |
-| foo_id               | Integer    | Foo ID                                   |
+| email                | String     | User Email                               |
+
+## Mock:User:Full
+
+| Field                | Type       | Description                              |
+| -------------------- | ---------- | ---------------------------------------- |
+| email                | String     | User Email                               |
+| roles                | [[Mock:Role](#mock-role)] | User Roles                               |
 
 # Routes
 
-## GET /api/v1/foos
+## GET /api/v1/users
 
-List Foos
+List Users
 
-- **Returns**: List of [Mock:Foo](#mock-foo)
-- **Security**: `required=["foo/bar.baz", "foo/bar.qux"]`
-
-**Parameters**:
-
-| Parameter            | Type       | Description                              |
-| -------------------- | ---------- | ---------------------------------------- |
-| filter               | Array      | required: false                          |
-| filter[foo_id]       | [Integer]  | required: false                          |
-
-## POST /api/v1/bars/:id
-
-Create Bar
-
-- **Returns**: [Mock:Bar](#mock-bar)
+- **Returns**: List of [Mock:User](#mock-user)
+- **Security**: `required=["admin/users.read"]`
 
 **Parameters**:
 
 | Parameter            | Type       | Description                              |
 | -------------------- | ---------- | ---------------------------------------- |
-| foos                 | [JSON]     | required: false                          |
-| foos[foo_id]         | Integer    | required: false                          |
-| id                   |            |                                          |
+| filter               | Hash       | required: false                          |
+| filter[email]        | [String]   | required: false                          |
+
+## PUT /api/v1/users/:email
+
+Update User
+
+- **Returns**: [Mock:User:Full](#mock-user-full)
+
+**Parameters**:
+
+| Parameter            | Type       | Description                              |
+| -------------------- | ---------- | ---------------------------------------- |
+| roles                | [JSON]     | required: false                          |
+| roles[name]          | String     | required: true                           |
+| email                |            |                                          |
 

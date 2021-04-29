@@ -56,7 +56,6 @@ module Grape
       @out.puts '# Entities'
       @out.puts
 
-      # TODO: maybe we'll have to dig into entity exposures
       entities.each do |entity|
         write_entity_header!(entity)
         @out.puts

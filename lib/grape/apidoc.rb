@@ -27,11 +27,36 @@ module Grape
       end
     end
 
+    # Returns all the entities used in app.
+    def entities
+      @entities ||= begin
+        acc = {}
+        @api.routes.filter_map(&:entity).each do |entity|
+          collect_entities(acc, entity)
+        end
+        acc.keys.sort_by(&:name)
+      end
+    end
+
+    # Recursively collects entities.
+    # @param acc Hash entity_class => true lookup/accumulator
+    # @param entity Grape::Entity root/seed entity
+    def collect_entities(acc, entity)
+      return if acc[entity]
+
+      acc[entity] = true
+
+      entity.root_exposures.each do |exp|
+        via = exp.try(:using_class_name)
+        collect_entities(acc, via) if via
+      end
+    end
+
     def write_entities!
       @out.puts '# Entities'
       @out.puts
 
-      @api.routes.filter_map(&:entity).uniq.sort_by(&:name).each do |entity|
+      entities.each do |entity|
         write_entity_header!(entity)
         @out.puts
 
@@ -45,7 +70,7 @@ module Grape
     end
 
     def write_entity_fields!(entity)
-      unless entity.documentation.present?
+      unless entity.root_exposures.present?
         @out.puts '*No fields exposed.*'
         return
       end
@@ -53,11 +78,21 @@ module Grape
       @out.puts FIELDS_TABLE.format('Field', 'Type', 'Description')
       @out.puts FIELDS_TABLE.separator
 
-      entity.documentation.each do |name, details|
-        # Problem: it's pretty much impossible to match Entity to model to dig column types.
-        # Need to either enforce some requirements for organizing API or give up.
-        type, desc, = details.values_at(:type, :desc)
-        type = "[#{type}]" if details[:is_array]
+      entity.root_exposures.each do |exposure|
+        name = exposure.attribute
+        doc = entity.documentation[name] || {}
+        type, desc, = doc.values_at(:type, :desc)
+
+        # fall back to `using:...`
+        unless type
+          via = exposure.try(:using_class_name)
+          if via
+            via_name = entity_name(via)
+            type = "[#{via_name}](##{identifier(via_name)})"
+          end
+        end
+
+        type = "[#{type}]" if doc[:is_array]
         @out.puts FIELDS_TABLE.format(name.to_s, type.to_s, desc.to_s)
       end
     end
@@ -121,16 +156,16 @@ module Grape
       @out.puts FIELDS_TABLE.format('Parameter', 'Type', 'Description')
       @out.puts FIELDS_TABLE.separator
 
-      route.params.each do |name, details|
+      route.params.each do |name, doc|
         # route.params includes path params as well, like `id => ''`
         # (not a hash, like normal params):
-        details = {} unless details.is_a?(Hash)
+        doc = {} unless doc.is_a?(Hash)
 
         # Problem: it's pretty much impossible to match Entity to model to dig column types.
         # Problem: it's not guaranteed that Entity exposures match params.
         # Need to either enforce some requirements for organizing API or give up.
-        type = details[:type] || ''
-        desc = details.except(:type).map {|k, v| "#{k}: #{v}" }.join(', ')
+        type = doc[:type] || ''
+        desc = doc.except(:type).map {|k, v| "#{k}: #{v}" }.join(', ')
         @out.puts FIELDS_TABLE.format(name.to_s, type, desc)
       end
     end

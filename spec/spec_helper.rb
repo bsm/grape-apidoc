@@ -4,4 +4,4 @@ require 'grape'
 require 'grape-entity'
 require 'stringio'
 
-require_relative './scenario/mock_project'
+require_relative './scenario/example'

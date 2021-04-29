@@ -1,4 +1,4 @@
-# grape-apidoc
+# grape-apidoc [![Test](https://github.com/bsm/grape-apidoc/actions/workflows/test.yml/badge.svg)](https://github.com/bsm/grape-apidoc/actions/workflows/test.yml)
 
 [Rake](https://github.com/ruby/rake) task to generate [Markdown](https://en.wikipedia.org/wiki/Markdown) documentation for [Grape](https://github.com/ruby-grape/grape)/[Grape::Entity](https://github.com/ruby-grape/grape-entity)-based APIs
 

@@ -180,7 +180,7 @@ module Grape
     def entity_name(entity)
       entity.name
             .split('::')
-            .filter_map {|s| s.gsub('Entity', '').presence } # Foo::Entity, FooEntity -> just Foo
+            .filter_map {|s| s.delete_suffix('Entity').presence } # Foo::Entity, FooEntity -> just Foo
             .join(':')
     end
   end

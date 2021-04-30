@@ -171,11 +171,17 @@ module Grape
     end
 
     def identifier(str)
-      str.downcase.gsub(/[^0-9a-z-]/, '-')
+      # FIXME: this is github-specific. At some point, maybe extract smth like testable Grape::Apidoc::Flavor::Github or so.
+
+      # "Foo::Bar is a foo_bar, -   definitely" -> "foobar-is-a-foo_bar-----definitely"
+      str.downcase.gsub(/[^0-9a-z_-]+/, '').gsub('\s', '-')
     end
 
     def entity_name(entity)
-      entity.name.gsub(/(?:::)?Entity\Z/, '').gsub('::', ':')
+      entity.name
+            .split('::')
+            .filter_map {|s| s.delete_suffix('Entity').presence } # Foo::Entity, FooEntity -> just Foo
+            .join(':')
     end
   end
 end

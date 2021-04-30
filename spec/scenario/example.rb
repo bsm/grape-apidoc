@@ -3,7 +3,7 @@ module Example
   User = Struct.new(:email, :roles)
 
   class Role::Entity < Grape::Entity
-    expose :name, documentation: { type: 'String', desc: 'Role Name' }
+    expose :name, as: :code, documentation: { type: 'String', desc: 'Role Code/Name' }
   end
 
   class User::Entity < Grape::Entity

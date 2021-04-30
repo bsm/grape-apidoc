@@ -79,7 +79,7 @@ module Grape
       @out.puts FIELDS_TABLE.separator
 
       entity.root_exposures.each do |exposure|
-        name = exposure.attribute
+        name = exposure.key
         doc = entity.documentation[name] || {}
         type, desc, = doc.values_at(:type, :desc)
 

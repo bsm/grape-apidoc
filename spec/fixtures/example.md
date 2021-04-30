@@ -4,7 +4,7 @@
 
 | Field                | Type       | Description                              |
 | -------------------- | ---------- | ---------------------------------------- |
-| name                 | String     | Role Name                                |
+| code                 | String     | Role Code/Name                           |
 
 ## Example:User
 
@@ -48,4 +48,3 @@ Update User
 | roles                | [JSON]     | required: false                          |
 | roles[name]          | String     | required: true                           |
 | email                |            |                                          |
-

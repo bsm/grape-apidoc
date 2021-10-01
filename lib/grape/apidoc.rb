@@ -3,7 +3,8 @@ module Grape
     autoload :RakeTask, 'grape/apidoc/rake_task'
     autoload :TableFormat, 'grape/apidoc/table_format'
 
-    FIELDS_TABLE = TableFormat.new([20, 10, 30, 10]).freeze # Field, Type, Description
+    ENTITY_FIELDS_TABLE = TableFormat.new([20, 10, 30, 10]).freeze # Field, Type, Description, Values
+    ROUTE_FIELDS_TABLE = TableFormat.new([20, 10, 40]).freeze # Field, Type, Description
 
     def initialize(root_api_class = nil, output: $stdout)
       @api = root_api_class || detect_root_api_class
@@ -75,8 +76,8 @@ module Grape
         return
       end
 
-      @out.puts FIELDS_TABLE.format('Field', 'Type', 'Description', 'Values')
-      @out.puts FIELDS_TABLE.separator
+      @out.puts ENTITY_FIELDS_TABLE.format('Field', 'Type', 'Description', 'Values')
+      @out.puts ENTITY_FIELDS_TABLE.separator
 
       entity.root_exposures.each do |exposure|
         name = exposure.key
@@ -93,7 +94,7 @@ module Grape
         end
 
         type = "[#{type}]" if doc[:is_array]
-        @out.puts FIELDS_TABLE.format(name.to_s, type.to_s, desc.to_s, vals&.join(', '))
+        @out.puts ENTITY_FIELDS_TABLE.format(name.to_s, type.to_s, desc.to_s, vals&.join(', '))
       end
     end
 
@@ -153,8 +154,8 @@ module Grape
       @out.puts '**Parameters**:'
       @out.puts
 
-      @out.puts FIELDS_TABLE.format('Parameter', 'Type', 'Description')
-      @out.puts FIELDS_TABLE.separator
+      @out.puts ROUTE_FIELDS_TABLE.format('Parameter', 'Type', 'Description')
+      @out.puts ROUTE_FIELDS_TABLE.separator
 
       route.params.each do |name, doc|
         # route.params includes path params as well, like `id => ''`
@@ -166,7 +167,7 @@ module Grape
         # Need to either enforce some requirements for organizing API or give up.
         type = doc[:type] || ''
         desc = doc.except(:type).map {|k, v| "#{k}: #{v}" }.join(', ')
-        @out.puts FIELDS_TABLE.format(name.to_s, type, desc)
+        @out.puts ROUTE_FIELDS_TABLE.format(name.to_s, type, desc)
       end
     end
 

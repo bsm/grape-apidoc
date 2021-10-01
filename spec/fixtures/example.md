@@ -31,10 +31,10 @@ List Users
 
 **Parameters**:
 
-| Parameter            | Type       | Description                    |            |
-| -------------------- | ---------- | ------------------------------ | ---------- |
-| filter               | Hash       | required: false                |            |
-| filter[email]        | [String]   | required: false                |            |
+| Parameter            | Type       | Description                              |
+| -------------------- | ---------- | ---------------------------------------- |
+| filter               | Hash       | required: false                          |
+| filter[email]        | [String]   | required: false                          |
 
 ## PUT /api/v1/users/:email
 
@@ -44,9 +44,9 @@ Update User
 
 **Parameters**:
 
-| Parameter            | Type       | Description                    |            |
-| -------------------- | ---------- | ------------------------------ | ---------- |
-| roles                | [JSON]     | required: false                |            |
-| roles[name]          | String     | required: true                 |            |
-| email                |            |                                |            |
+| Parameter            | Type       | Description                              |
+| -------------------- | ---------- | ---------------------------------------- |
+| roles                | [JSON]     | required: false                          |
+| roles[name]          | String     | required: true                           |
+| email                |            |                                          |
 

@@ -2,22 +2,23 @@
 
 ## Example:Role
 
-| Field                | Type       | Description                              |
-| -------------------- | ---------- | ---------------------------------------- |
-| code                 | String     | Role Code/Name                           |
+| Field                | Type       | Description                    | Values     |
+| -------------------- | ---------- | ------------------------------ | ---------- |
+| code                 | String     | Role Code/Name                 |            |
+| level                | String     | Role Access Level              | 1, 2, 3    |
 
 ## Example:User
 
-| Field                | Type       | Description                              |
-| -------------------- | ---------- | ---------------------------------------- |
-| email                | String     | User Email                               |
+| Field                | Type       | Description                    | Values     |
+| -------------------- | ---------- | ------------------------------ | ---------- |
+| email                | String     | User Email                     |            |
 
 ## Example:User:Full
 
-| Field                | Type       | Description                              |
-| -------------------- | ---------- | ---------------------------------------- |
-| email                | String     | User Email                               |
-| roles                | [[Example:Role](#examplerole)] | User Roles                               |
+| Field                | Type       | Description                    | Values     |
+| -------------------- | ---------- | ------------------------------ | ---------- |
+| email                | String     | User Email                     |            |
+| roles                | [[Example:Role](#examplerole)] | User Roles                     |            |
 
 # Routes
 
@@ -30,10 +31,10 @@ List Users
 
 **Parameters**:
 
-| Parameter            | Type       | Description                              |
-| -------------------- | ---------- | ---------------------------------------- |
-| filter               | Hash       | required: false                          |
-| filter[email]        | [String]   | required: false                          |
+| Parameter            | Type       | Description                    |            |
+| -------------------- | ---------- | ------------------------------ | ---------- |
+| filter               | Hash       | required: false                |            |
+| filter[email]        | [String]   | required: false                |            |
 
 ## PUT /api/v1/users/:email
 
@@ -43,8 +44,9 @@ Update User
 
 **Parameters**:
 
-| Parameter            | Type       | Description                              |
-| -------------------- | ---------- | ---------------------------------------- |
-| roles                | [JSON]     | required: false                          |
-| roles[name]          | String     | required: true                           |
-| email                |            |                                          |
+| Parameter            | Type       | Description                    |            |
+| -------------------- | ---------- | ------------------------------ | ---------- |
+| roles                | [JSON]     | required: false                |            |
+| roles[name]          | String     | required: true                 |            |
+| email                |            |                                |            |
+

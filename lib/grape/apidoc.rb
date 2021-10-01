@@ -3,7 +3,7 @@ module Grape
     autoload :RakeTask, 'grape/apidoc/rake_task'
     autoload :TableFormat, 'grape/apidoc/table_format'
 
-    FIELDS_TABLE = TableFormat.new([20, 10, 40]).freeze # Field, Type, Description
+    FIELDS_TABLE = TableFormat.new([20, 10, 30, 10]).freeze # Field, Type, Description
 
     def initialize(root_api_class = nil, output: $stdout)
       @api = root_api_class || detect_root_api_class
@@ -75,13 +75,13 @@ module Grape
         return
       end
 
-      @out.puts FIELDS_TABLE.format('Field', 'Type', 'Description')
+      @out.puts FIELDS_TABLE.format('Field', 'Type', 'Description', 'Values')
       @out.puts FIELDS_TABLE.separator
 
       entity.root_exposures.each do |exposure|
         name = exposure.key
         doc = entity.documentation[name] || {}
-        type, desc, = doc.values_at(:type, :desc)
+        type, desc, vals = doc.values_at(:type, :desc, :values)
 
         # fall back to `using:...`
         unless type
@@ -93,7 +93,7 @@ module Grape
         end
 
         type = "[#{type}]" if doc[:is_array]
-        @out.puts FIELDS_TABLE.format(name.to_s, type.to_s, desc.to_s)
+        @out.puts FIELDS_TABLE.format(name.to_s, type.to_s, desc.to_s, vals&.join(', '))
       end
     end
 

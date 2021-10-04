@@ -2,22 +2,23 @@
 
 ## Example:Role
 
-| Field                | Type       | Description                              |
-| -------------------- | ---------- | ---------------------------------------- |
-| code                 | String     | Role Code/Name                           |
+| Field                | Type       | Description                    | Values     |
+| -------------------- | ---------- | ------------------------------ | ---------- |
+| code                 | String     | Role Code/Name                 |            |
+| level                | String     | Role Access Level              | 1, 2, 3    |
 
 ## Example:User
 
-| Field                | Type       | Description                              |
-| -------------------- | ---------- | ---------------------------------------- |
-| email                | String     | User Email                               |
+| Field                | Type       | Description                    | Values     |
+| -------------------- | ---------- | ------------------------------ | ---------- |
+| email                | String     | User Email                     |            |
 
 ## Example:User:Full
 
-| Field                | Type       | Description                              |
-| -------------------- | ---------- | ---------------------------------------- |
-| email                | String     | User Email                               |
-| roles                | [[Example:Role](#examplerole)] | User Roles                               |
+| Field                | Type       | Description                    | Values     |
+| -------------------- | ---------- | ------------------------------ | ---------- |
+| email                | String     | User Email                     |            |
+| roles                | [[Example:Role](#examplerole)] | User Roles                     |            |
 
 # Routes
 
@@ -48,3 +49,4 @@ Update User
 | roles                | [JSON]     | required: false                          |
 | roles[name]          | String     | required: true                           |
 | email                |            |                                          |
+

@@ -1,9 +1,10 @@
 module Example
-  Role = Struct.new(:name)
+  Role = Struct.new(:name, :level)
   User = Struct.new(:email, :roles)
 
   class Role::Entity < Grape::Entity
     expose :name, as: :code, documentation: { type: 'String', desc: 'Role Code/Name' }
+    expose :level, documentation: { type: 'String', desc: 'Role Access Level', values: [1, 2, 3] }
   end
 
   class User::Entity < Grape::Entity

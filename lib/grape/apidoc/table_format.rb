@@ -17,7 +17,7 @@ class Grape::Apidoc::TableFormat < Array
 
     each_with_index do |width, _index|
       str << ' '
-      str << '-' * width
+      str << ('-' * width)
       str << ' |'
     end
 

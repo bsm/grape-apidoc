@@ -1,4 +1,4 @@
-class Grape::Apidoc::RakeTask < ::Rake::TaskLib
+class Grape::Apidoc::RakeTask < Rake::TaskLib
   def initialize(name = :apidoc, root_api_class: nil, output: $stdout)
     super()
 

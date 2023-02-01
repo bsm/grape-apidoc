@@ -1,3 +1,7 @@
 source 'http://rubygems.org'
 gemspec
-gem 'mustermann', '< 2'
+gem 'grape-entity'
+gem 'mustermann', '>= 3'
+gem 'rake'
+gem 'rspec'
+gem 'rubocop-bsm'

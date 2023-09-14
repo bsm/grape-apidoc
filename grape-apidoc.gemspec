@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'grape-apidoc'
-  s.version     = '0.0.3'
+  s.version     = '0.0.4'
   s.authors     = ['Black Square Media Ltd.']
   s.email       = ['info@blacksquaremedia.com']
   s.summary     = 'Markdown documentation for Grape APIs'
@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
 
   s.files         = `git ls-files -z`.split("\x0").reject {|f| f.start_with?('spec/') }
   s.require_paths = ['lib']
-  s.required_ruby_version = '>= 2.7'
+  s.required_ruby_version = '>= 3.0'
 
   s.add_dependency 'grape'
 

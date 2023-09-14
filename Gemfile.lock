@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    grape-apidoc (0.0.3)
+    grape-apidoc (0.0.4)
       grape
 
 GEM
@@ -17,7 +17,7 @@ GEM
     builder (3.2.4)
     concurrent-ruby (1.2.2)
     diff-lcs (1.5.0)
-    dry-core (1.0.0)
+    dry-core (1.0.1)
       concurrent-ruby (~> 1.0)
       zeitwerk (~> 2.6)
     dry-inflector (1.0.0)

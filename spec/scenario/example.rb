@@ -39,7 +39,7 @@ module Example
       success User::FullEntity
     end
     params do
-      optional :roles, type: Array[JSON] do
+      optional :roles, type: [JSON] do
         requires :name, type: String
       end
     end

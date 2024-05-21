@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    grape-apidoc (0.0.4)
+    grape-apidoc (0.0.3)
       grape
 
 GEM
@@ -14,6 +14,7 @@ GEM
       tzinfo (~> 2.0)
     ast (2.4.2)
     base64 (0.1.1)
+    bigdecimal (3.1.8)
     builder (3.2.4)
     concurrent-ruby (1.2.2)
     diff-lcs (1.5.0)
@@ -25,13 +26,14 @@ GEM
       concurrent-ruby (~> 1.0)
       dry-core (~> 1.0, < 2)
       zeitwerk (~> 2.6)
-    dry-types (1.7.1)
+    dry-types (1.7.2)
+      bigdecimal (~> 3.0)
       concurrent-ruby (~> 1.0)
       dry-core (~> 1.0)
       dry-inflector (~> 1.0)
       dry-logic (~> 1.4)
       zeitwerk (~> 2.6)
-    grape (1.8.0)
+    grape (2.0.0)
       activesupport (>= 5)
       builder
       dry-types (>= 1.1)
@@ -56,7 +58,7 @@ GEM
       ast (~> 2.4.1)
       racc
     racc (1.7.1)
-    rack (3.0.9.1)
+    rack (3.0.11)
     rack-accept (0.4.5)
       rack (>= 0.4)
     rainbow (3.1.1)
@@ -115,7 +117,7 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.4.2)
-    zeitwerk (2.6.11)
+    zeitwerk (2.6.14)
 
 PLATFORMS
   x86_64-linux
